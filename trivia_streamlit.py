@@ -3,7 +3,7 @@ import json
 import streamlit as st
 
 # Cargar el dataset de preguntas desde un archivo JSON
-with open(r'C:\Users\IA-CM\Desktop\Compartida Camila\Trivia\trivia.json', 'r', encoding='utf-8') as f:
+with open('trivia.json', 'r', encoding='utf-8') as f:
     trivia_data = json.load(f)
 
 # Función principal del juego de trivia
