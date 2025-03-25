@@ -17,6 +17,7 @@ def trivia_game():
         st.session_state.total_questions = 0
         st.session_state.question = None
         st.session_state.correct_answer = None
+        st.session_state.user_input = ""  # Nueva clave para manejar el cuadro de texto
 
     # Generar nueva pregunta si no hay una activa
     if st.session_state.question is None:
@@ -28,8 +29,8 @@ def trivia_game():
     # Mostrar pregunta actual
     st.write(f"**Pregunta:** {st.session_state.question}")
 
-    # Entrada de texto para respuesta, reiniciada al enviar
-    user_input = st.text_input("Tu respuesta:", key="respuesta").strip().lower()
+    # Entrada de texto para respuesta
+    user_input = st.text_input("Tu respuesta:", value=st.session_state.user_input).strip().lower()
 
     if st.button("Enviar respuesta"):
         if user_input:
@@ -40,12 +41,17 @@ def trivia_game():
             else:
                 st.error(f"Incorrecto. La respuesta correcta era: {st.session_state.correct_answer}")
 
-            # Reiniciar la pregunta y vaciar cuadro de texto
+            # Reiniciar para la siguiente pregunta
             st.session_state.question = None
-            st.session_state["respuesta"] = ""
+            st.session_state.user_input = ""  # Vaciar el cuadro de texto al enviar respuesta
 
     # Mostrar puntuación actual
     st.write(f"**Puntuación:** {st.session_state.score}/{st.session_state.total_questions}")
+
+# Ejecutar la aplicación
+if __name__ == "__main__":
+    trivia_game()
+
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
