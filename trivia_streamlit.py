@@ -5,6 +5,7 @@ import streamlit as st
 # Cargar el dataset de preguntas desde un archivo JSON
 with open('trivia.json', 'r', encoding='utf-8') as f:
     trivia_data = json.load(f)
+
 # Función principal del juego de trivia
 def trivia_game():
     st.title("Trivial Jedi - ¡Juega ahora!")
@@ -16,6 +17,7 @@ def trivia_game():
         st.session_state.total_questions = 0
         st.session_state.question = None
         st.session_state.correct_answer = None
+        st.session_state.answered = False  # Controla si la pregunta fue respondida
 
     # Generar nueva pregunta si no hay una activa
     if st.session_state.question is None:
@@ -23,6 +25,7 @@ def trivia_game():
         item = random.choice(category['questions'])
         st.session_state.question = item['question']
         st.session_state.correct_answer = item['answer'].lower()
+        st.session_state.answered = False
 
     # Mostrar pregunta actual
     st.write(f"**Pregunta:** {st.session_state.question}")
@@ -32,7 +35,7 @@ def trivia_game():
         "Tu respuesta:", key=f"respuesta_{st.session_state.total_questions}"
     ).strip().lower()
 
-    if st.button("Enviar respuesta"):
+    if st.button("Enviar respuesta") and not st.session_state.answered:
         if user_input:
             st.session_state.total_questions += 1
             if user_input == st.session_state.correct_answer:
@@ -40,12 +43,16 @@ def trivia_game():
                 st.session_state.score += 1
             else:
                 st.error(f"Incorrecto. La respuesta correcta era: {st.session_state.correct_answer}")
-
-            # Reiniciar para la siguiente pregunta
-            st.session_state.question = None
+            st.session_state.answered = True  # Se marca como respondida
 
     # Mostrar puntuación actual
     st.write(f"**Puntuación:** {st.session_state.score}/{st.session_state.total_questions}")
+
+    # Botón para pasar a la siguiente pregunta
+    if st.session_state.answered:
+        if st.button("Siguiente"):
+            st.session_state.question = None  # Reiniciar para la siguiente pregunta
+            st.session_state.answered = False
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
